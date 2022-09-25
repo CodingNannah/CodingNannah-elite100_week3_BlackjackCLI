@@ -30,11 +30,23 @@ Meanwhile, adapting this to a GUI version (TKinter or HTTP/CSS/JS),creating a St
 
 To play this program: 
 
-Download or open the requirements.txt file and install the required packages or modules. 
+First, enable venv (virtual environment that allows packages in Python).
+    Windows:
+1. python -m venv venv
+2. venv\Scripts\Activate
+    Linux or Mac:
+1. python3 -m venv venv
+2. source/bin/activate 
 
-For windows terminal: Type python blackjack.py 
-For linux or mac: Type python3 blackjack.py
-For most sandbox apps: Click the blue "Run" button 
+
+Second, download or open the requirements.txt file and install the required packages and/or modules using pip. 
+1. pip install -r requests
+2. pip install [pkg name]
+
+Last, initiate the game.
+Windows terminal: Type python blackjack.py 
+Linux or Mac: Type python3 blackjack.py
+Most sandbox apps: Click the blue "Run" button 
 
 
 You may find this project and future adaptations at https://github.com/CodingNannah/elite100_week3_BlackjackCLI. Coding Nannah welcomes questions, kudos, and/or suggestions.
