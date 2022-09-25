@@ -110,7 +110,7 @@ class Game:
         print(intro)
 
         name = input("Enter your name here: ").title()
-        print_yellow(figlet_format(f"Welcome {name} to {title}!", font='fig'))
+        print_yellow(f"Welcome {name} to {title}!")
 
     # Boolean - playing or not?
     def play(self):
@@ -132,10 +132,10 @@ class Game:
 
             # "See" the hands
             # Change this to visual cards with an API
-            print_yellow(figlet_format("Your hand is: ",font='fig'))
+            print_yellow("Your hand is: ")
             self.player_hand.display()
             print()
-            print_blue(figlet_format("Dealer's hand is: ",font='fig'))
+            print_blue("Dealer's hand is: ")
             self.dealer_hand.display()
 
             # boolean while loop to run if game NOT over
@@ -145,6 +145,7 @@ class Game:
                 # Blackjack = game over; check if no blackjack, so game still on
                 player_has_blackjack = self.check_for_blackjack()
                 if player_has_blackjack: 
+                    #ascii_magic here:
                     print(blackjack_win)
                     #Winner - must change game_over status
                     game_over = True
@@ -152,18 +153,20 @@ class Game:
                     continue               
             
             # also in play section: hit or stand 
-            choice = input("Do you [Hit / Stand]? ").lower()
+            choice = input_cyan("Do you [Hit / Stand]? ").lower()
             #if the input isn't understood
             while choice not in ["hit", "h", "stand", "s"]:
-                choice = input("Please type either 'hit' or 'stand'. ")
+                choice = input_red("Please type either 'hit' or 'stand'. ")
             if choice in ["hit", "h"]:
                 # choose to hit = add card to hand from deck
                 self.player_hand.add_card(self.deck.deal())
                 self.player_hand.display()
                 # hit possibility is hand is over - check
                 if self.player_is_over():
+                    #ascii_magic here:
                     print(bust)
-                    print_red(figlet_format("Your hand is over 21. You lose this round.", font='doom'))
+                    print_red("Your hand is over 21. You lose.")
+                    print_red(figlet_format("*****GAME OVER*****"), font='doom')
                     game_over = True
             else:
                 # this is the stand option
@@ -182,7 +185,7 @@ class Game:
 
                 #compare hands & print win statements:
                 if player_hand_value > dealer_hand_value:
-                    print_green(figlet_format("You win this round!",font='advenger'))
+                    print_green(figlet_format("You win this round!", font = 'advenger'))
                 elif player_hand_value == dealer_hand_value:
                     print_blue("It's a tie. House wins!")
                     print_red("You lose this round.")
@@ -197,7 +200,7 @@ class Game:
             again = input("Please enter Y or N. ")
         if again.lower() == "n":
             # done = playing (no = false), game_over (yes = true)
-            print_cyan(f"Thanks for playing {title}! Come again soon!", font = 'fig')
+            print_cyan(f"Thanks for playing {title}! Come again soon!")
             playing = False
         else:
             # play again = playing (yes = true), game_over (no = false)
@@ -213,27 +216,20 @@ class Game:
         # boolean check if hand is over
         return self.dealer_hand.get_value() > 21
     
-
     # must tell computer how to check for blackjack:
-    def check_for_blackjack(self):
-        #which player has blackjack? Boolean for both:
+    # NOT allowing dealer to get blackjack!
+    def check_for_blackjack(self, player):
         player = False
-        dealer = False
-        # check if either dealer or player have blackjack
+        # check if player has blackjack
         if self.player_hand.get_value() == 21:
-            # Boolean value changes to true (yes, blackjack!) for whichever (or if each) has 21
+            # Boolean value changes to true (yes, blackjack!) 
             player = True
-        # check if the other has blackjack
-        if self.dealer_hand.get_value() == 21:
-            # Boolean value changes to true (yes, blackjack!) for the other if it has 21
-            dealer = True
-            return player, dealer
-
+            return player
 
     def show_blackjack_results(self, player_has_blackjack):
         # if both have blackjack at the same time == draw
         if player_has_blackjack:
-            print_green(figlet_format("You have blackjack! You win!", font = 'fig'))
+            print_green(figlet_format("You have blackjack! You win!", font = 'advenger'))
 
         #game loop auto continues if neither has blackjack
         # in playing: player must choose to hit (add more cards) or stick with current cards
