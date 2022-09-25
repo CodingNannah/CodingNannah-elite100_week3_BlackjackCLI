@@ -1,11 +1,9 @@
-import requests
 import random 
 from colorizer import *
 from pyfiglet import figlet_format
 from my_ascii_magic import intro, blackjack_win, bust
 
 
-""" Suggested by Tutor: Make suits, ranks, values global -- unless, using Deck of Cards API?"""
 
 title = "Coding Nannah's Black Jack Game"
 
