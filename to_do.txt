@@ -1,0 +1,62 @@
+Suggested by Tutor: Make suits, ranks, values global
+ -- unless, using Deck of Cards API
+    Another option == create cards in separate.py
+
+Deactivate venv:
+    type deactivate
+
+Colorizer Text:
+    Player - Yellow
+    Dealer - Blue
+    Defeat - Red
+    Win - Green
+    Other message - Cyan
+
+Text - Font:
+    Welcome?
+    Good-bye?
+    Title: Coding Nannah's Black Jack Game
+    Win?
+    Lose?
+    python: for FONTS in 'pyfiglet --list_fonts'; do echo $FONTS; pyfiglet $FONTS  -f $FONTS; done; 
+
+Images in ascii magic:
+    Welcome & Blackjack logo - DONE!
+    Blackjack win - fireworks & blackjack.png
+    Bust - explode & bust 
+
+Play Options:
+    rules for dealer: dealer hit
+    bust - check aces:
+    adjust for multi-ace rule & code?- only subtract once per draw?
+
+To the code:
+    create an INSTANCE to play! - DONE!
+    create the {title}! - DONE!
+
+Cards:
+    Star Wars cards! https://github.com/kimuraz/api-sw-cards
+    if not work & have time: could scan png & add images folder for cards
+    
+    bring in https://www.deckofcardsapi.com/ 
+    
+    find a children's suit? - another time
+
+
+************
+Set up options:
+    create venv  - DONE
+    import:
+        requests - DONE
+        os - DONE
+        time? - DONE
+        font - pyfiglet - DONE
+        color - colorama - DONE
+        ascii_magic - DONE
+    all in one file or parts in separate files?
+        colorizer in own
+
+Disregarded Play Options:
+    Betting or points
+        surrender? split? double-down?
+    Player option: Up to four players?
