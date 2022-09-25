@@ -1,0 +1,13 @@
+venv/
+__pycache__/
+*.pyc
+to_do.txt
+testcolorama.py
+testfiglet.py
+testmagic.py
+testapi_deck_of_cards.py
+testapi_starwars.py
+test_four_player.py
+dealer_player_gameplay.py
+deck_generic.py
+images_starwars/
