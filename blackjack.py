@@ -25,7 +25,7 @@ class Card:
 class Deck:
     def __init__(self):
         # every possible card of 52 for suit and for value - list comprehension!
-        self.cards = [Card(s, v) for s in ["Spades", "Clubs", "Hearts", "Diamonds"]\
+        self.cards = [Card(s, v) for s in ["♠", "♣", "♡", "♢"]\
              for v in ["A","2","3","4","5","6","7","8","9","10","J","Q","K"]]
 
     def shuffle(self):
@@ -110,7 +110,7 @@ class Game:
         print(intro)
 
         name = input("Enter your name here: ").title()
-        print(f"Welcome {name} to {title}!")
+        print_yellow(figlet_format(f"Welcome {name} to {title}!", font='fig'))
 
     # Boolean - playing or not?
     def play(self):
@@ -132,10 +132,10 @@ class Game:
 
             # "See" the hands
             # Change this to visual cards with an API
-            print("Your hand is: ")
+            print_yellow(figlet_format("Your hand is: ",font='fig'))
             self.player_hand.display()
             print()
-            print("Dealer's hand is: ")
+            print_blue(figlet_format("Dealer's hand is: ",font='fig'))
             self.dealer_hand.display()
 
             # boolean while loop to run if game NOT over
@@ -163,7 +163,7 @@ class Game:
                 # hit possibility is hand is over - check
                 if self.player_is_over():
                     print(bust)
-                    print("Your hand is over 21. You lose this round.")
+                    print_red(figlet_format("Your hand is over 21. You lose this round.", font='doom'))
                     game_over = True
             else:
                 # this is the stand option
@@ -177,25 +177,27 @@ class Game:
 
                 #print hand statements:
                 print("Final Results")
-                print("Your hand:", player_hand_value)
-                print("Dealer's hand:", dealer_hand_value)
+                print_yellow("Your hand:", player_hand_value)
+                print_blue("Dealer's hand:", dealer_hand_value)
 
                 #compare hands & print win statements:
                 if player_hand_value > dealer_hand_value:
-                    print("You win this round!")
+                    print_green(figlet_format("You win this round!",font='advenger'))
                 elif player_hand_value == dealer_hand_value:
-                    print("It's a tie. House wins this round!")
+                    print_blue("It's a tie. House wins!")
+                    print_red("You lose this round.")
                 else:
-                    print("House wins this round!")
+                    print_blue("House wins!")
+                    print_red("You lose this round.")
                 game_over = True
         
         # outside play while loop: make it possible to play another round
-        again = input("Would you like to play another round? [Y/N] ")
+        again = input_cyan("Would you like to play another round? [Y/N] ")
         while again.lower() not in ["y", "n"]:
             again = input("Please enter Y or N. ")
         if again.lower() == "n":
             # done = playing (no = false), game_over (yes = true)
-            print(f"Thanks for playing {title}!")
+            print_cyan(f"Thanks for playing {title}! Come again soon!", font = 'fig')
             playing = False
         else:
             # play again = playing (yes = true), game_over (no = false)
@@ -228,16 +230,10 @@ class Game:
             return player, dealer
 
 
-    def show_blackjack_results(self, player_has_blackjack, dealer_has_blackjack):
+    def show_blackjack_results(self, player_has_blackjack):
         # if both have blackjack at the same time == draw
-        if player_has_blackjack and dealer_has_blackjack:
-            print("The player and the dealer have blackjack! It's a draw.")
-
-        elif player_has_blackjack:
-            print("You have blackjack! You win!")
-        
-        elif dealer_has_blackjack:
-            print("Dealer has blackjack! Dealer wins!")
+        if player_has_blackjack:
+            print_green(figlet_format("You have blackjack! You win!", font = 'fig'))
 
         #game loop auto continues if neither has blackjack
         # in playing: player must choose to hit (add more cards) or stick with current cards
