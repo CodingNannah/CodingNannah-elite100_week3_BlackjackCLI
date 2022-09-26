@@ -4,11 +4,11 @@ import ascii_magic
 
 ascii_magic.init_terminal()
 
-def intro(self, cols=100):
+def intro(cols=100):
     clear_screen()
     print('\n *5')
     url = "https://www.pngmart.com/image/32119"
-    welcome_img = ascii_magic.from_url(self.image, columns=cols)
+    welcome_img = ascii_magic.from_url(url, columns=cols)
     ascii_magic.to_terminal(welcome_img)
     time.sleep(2)
     clear_screen()
@@ -17,11 +17,9 @@ def intro(self, cols=100):
     ascii_magic.to_terminal(blackjack_img)
     time.sleep(2)
     clear_screen()
-    
-    return intro
 
 
-def blackjack_win(self, cols=100):   
+def blackjack_win(cols=100):   
     clear_screen()
     print('\n *5')
     fireworks_img = ascii_magic.from_image_file('./images/fireworks.png')
@@ -33,11 +31,9 @@ def blackjack_win(self, cols=100):
     ascii_magic.to_terminal(win_img)
     time.sleep(2)
     clear_screen()  
-    
-    return blackjack_win
 
 
-def bust(self, cols=100):   
+def bust(cols=100):   
     clear_screen()
     print('\n *5')
     explode_img = ascii_magic.from_image_file('./images/explode.png')
@@ -50,4 +46,3 @@ def bust(self, cols=100):
     time.sleep(2)
     clear_screen()
 
-    return blackjack_win

@@ -10,7 +10,7 @@ suit = ["♠", "♣", "♡", "♢"]
 label = [' 2', ' 3', ' 4', ' 5', ' 6', ' 7', ' 8', ' 9', '10', ' J', ' Q', ' K', ' A']
 full_deck = [f"{j} of {i}" for j in label for i in suit]*4
 deck = full_deck[:]
-error = print_red('Try that again.')
+error = print_red("Oops, Let's try that again.")
 
 
 class Card:
@@ -54,10 +54,10 @@ class Card:
 
 class Dealer(Card):
     
-    def __init__(self, name='Monty'):
+    def __init__(self):
         self.name = name
-        self.hand = []
-        return f"Your dealer today is {name}."        
+        name ='Monty'
+        self.hand = []      
 
     def hidden_hand(self):
         print(f"Dealer's hand:")
@@ -125,7 +125,8 @@ class Dealer(Card):
 
 class Player(Dealer):
     
-    def __str__(self):
+    def __str__(self, name):
+        name = self.name
         return self.name
 
     def __repr__(self):
@@ -161,141 +162,141 @@ class Hand():
 
 class Game(Dealer):
     def __init__(self):
-        pass
 
-    print(intro)
+        print(intro)
 
-    name = input("Enter your name here: ").title()
-    print_cyan(f"Welcome {name} to {title}!")
+        name = input("Enter your name here: ").title()
+        print_cyan(f"Welcome {name} to {title}!")
 
-    start_q = input_cyan('Do you know how to play Blackjack? Are you ready to play? (Y/N/Quit) ').lower()
-    
-    if start_q == 'quit':
-        print_cyan(f"Thanks for visiting {title}, {name}. Come again soon!") 
-
-    if start_q == 'n':
-        clear_screen()
-        print("""
-        Here are the basics: 
-
-        You are playing against the dealer. You each receive two cards to begin, however you will only see one 
-        of the dealer's cards. You are trying to beat the dealer at getting 21 points or as close to it as possible
-        without going over. Going over is known as a "bust." Aces are worth either one or eleven points. There are 
-        no wild cards. If, one the first deal, the dealer gives you an ace and a card worth ten points (21 points), 
-        you've won Black Jack! 
+        start_q = input_cyan('Do you know how to play Blackjack? Are you ready to play? (Y/N/Quit) ').lower()
         
-        If you do not have 21 points after the first deal, you will choose to hit (receive another card) or stand 
-        (stay with the cards you have). You may hit as many times as you wish. Just be careful not to go bust! If 
-        you achieve 21 points after the first deal, you win, but do not achieve Black Jack. In the event of a tie, 
-        the dealer wins.
-        """)
-        time.sleep(5)
-        clear_screen()
-        print(start_q)
+        if start_q == 'quit':
+            print_cyan(f"Thanks for visiting {title}, {name}. Come again soon!") 
 
-    while start_q not in ('y', 'n'):
-        print(error)
-        print(start_q)
+        if start_q == 'n':
+            clear_screen()
+            print("""
+            Here are the basics: 
 
-    if start_q == 'y':
-        print_cyan(figlet_format("Let's Go!"(font='basic')))
-
-        
-        dealer = Dealer("Monty")                                                               # creating instance of Dealer
-        player = Player({name})                                      # creating instance of Player
-        again = 'y'
-
-        while again == 'y':
-            if len(deck) < 25:
-                deck = full_deck[:]
+            You are playing against the dealer. You each receive two cards to begin, however you will only see one 
+            of the dealer's cards. You are trying to beat the dealer at getting 21 points or as close to it as possible
+            without going over. Going over is known as a "bust." Aces are worth either one or eleven points. There are 
+            no wild cards. If, one the first deal, the dealer gives you an ace and a card worth ten points (21 points), 
+            you've won Black Jack! 
             
-            print("Monty is dealing...")
-            time.sleep(2)
+            If you do not have 21 points after the first deal, you will choose to hit (receive another card) or stand 
+            (stay with the cards you have). You may hit as many times as you wish. Just be careful not to go bust! If 
+            you achieve 21 points after the first deal, you win, but do not achieve Black Jack. In the event of a tie, 
+            the dealer wins.
+            """)
+            time.sleep(5)
+            clear_screen()
+            print(start_q)
 
-            player_hand = Hand()
-            player_hand.create_hand()
-            dealer_hand = Hand()
-            dealer_hand.create_hand()
-            player.reveal_hand(player_hand)
-            dealer.hidden_hand(dealer_hand)
-            player_value = player.value(player_hand.hand)
+        while start_q not in ('y', 'n'):
+            print(error)
+            print(start_q)
 
-            if player_value == 21:
-                print(blackjack_win)
+        if start_q == 'y':
+            print_cyan(figlet_format("Let's Go!", font='basic'))
+
+            dealer = Dealer('Monty') # creating instance of Dealer
+            player = Player(name)   # creating instance of Player
+            again = 'y'
+
+            print(f"Your dealer today is {name}."  )
+
+            while again == 'y':
+                if len(deck) < 25:
+                    deck = full_deck[:]
                 
-            else:
-                print(f"Dealer's visible card: {dealer_hand.hand[1][0]}")
-                choice = input_cyan('Do you choose to Hit or Stand? (H/S) ').lower()
-                
-                while choice not in ('h', 's'):
-                    print(error)
-                    print(choice)
-                
-                while choice == 'h':
-                    player_hand.hit()
-                    player.reveal_hand(player_hand)
-                    player_value = player.value(player_hand.hand)
+                print("Monty is dealing...")
+                time.sleep(2)
+
+                player_hand = Hand()
+                player_hand.create_hand()
+                dealer_hand = Hand()
+                dealer_hand.create_hand()
+                player.reveal_hand(player_hand)
+                dealer.hidden_hand(dealer_hand)
+                player_value = player.value(player_hand.hand)
+
+                if player_value == 21:
+                    print(blackjack_win)
                     
-                    if player_value == 21:
-                        print_yellow(figlet_format("You won!"(font='basic')))
-                        break
-                    
-                    elif player_value > 21:
-                        print(bust)
-                        print_red('You BUSTED! Better luck next time!')
-                        break
-                   
-                    else:
-                        print(f"Dealer's visible card: {dealer_hand.hand[1][0]}")
-                        
-                        decision = input('Would you like to hit again? (H/S) ').lower()
-                        while decision not in ('h', 's'):
-                            print(error)
-                            print(decision)
                 else:
-                    # if stand - determine winner
-                    # show dealers cards
-                    if player_value >= 21:
-                        continue
+                    print(f"Dealer's visible card: {dealer_hand.hand[1][0]}")
+                    choice = input_cyan('Do you choose to Hit or Stand? (H/S) ').lower()
                     
-                    else: 
-                        dealer.reveal_hand(dealer_hand)
-                        dealer_value = dealer.value(dealer_hand.hand)
+                    while choice not in ('h', 's'):
+                        print(error)
+                        print(choice)
+                    
+                    while choice == 'h':
+                        player_hand.hit()
+                        player.reveal_hand(player_hand)
+                        player_value = player.value(player_hand.hand)
                         
-                        while dealer_value < 17:
-                            print("Monty hits the Dealer hand.")
-                            dealer_hand.hit()
+                        if player_value == 21:
+                            print_yellow(figlet_format("You won!", font='basic'))
+                            break
+                        
+                        elif player_value > 21:
+                            print(bust)
+                            print_red('You BUSTED! Better luck next time!')
+                            break
+                    
+                        else:
+                            print(f"Dealer's visible card: {dealer_hand.hand[1][0]}")
+                            
+                            decision = input('Would you like to hit again? (H/S) ').lower()
+                            while decision not in ('h', 's'):
+                                print(error)
+                                print(decision)
+                    else:
+                        # if stand - determine winner
+                        # show dealers cards
+                        if player_value >= 21:
+                            continue
+                        
+                        else: 
                             dealer.reveal_hand(dealer_hand)
                             dealer_value = dealer.value(dealer_hand.hand)
-                            time.sleep(2)
-                        
-                        if 17 <= dealer_value <= 21:
-                            if dealer_value > player_value:
-                                player.value(player_hand.hand)
-                                print_blue('Dealer wins!')
-
-                            elif dealer_value == player_value:
-                                player.value(player_hand.hand)
-                                print_blue("It's a tie. Dealer wins!")
                             
+                            while dealer_value < 17:
+                                print("Monty hits the Dealer hand.")
+                                dealer_hand.hit()
+                                dealer.reveal_hand(dealer_hand)
+                                dealer_value = dealer.value(dealer_hand.hand)
+                                time.sleep(2)
+                            
+                            if 17 <= dealer_value <= 21:
+                                if dealer_value > player_value:
+                                    player.value(player_hand.hand)
+                                    print_blue('Dealer wins!')
+
+                                elif dealer_value == player_value:
+                                    player.value(player_hand.hand)
+                                    print_blue("It's a tie. Dealer wins!")
+                                
+                                else:
+                                    player.value(player_hand.hand)
+                                    print_yellow('You win!')
+                                
                             else:
                                 player.value(player_hand.hand)
-                                print_yellow('You win!')
-                               
-                        else:
-                            player.value(player_hand.hand)
-                            print_yellow('Dealer BUSTED. You win!')
-                            
-            again = input_cyan('Would you like to play again? (Y/N) ')
-            
-            while again not in ('y','n'):
-                print(error)
-                print(again)
-            
-            if again == 'n':
-                print(f'{name}, thanks for playing {title}! Come again soon!')
+                                print_yellow('Dealer BUSTED. You win!')
+                                
+                again = input_cyan('Would you like to play again? (Y/N) ')
+                
+                while again not in ('y','n'):
+                    print(error)
+                    print(again)
+                
+                if again == 'n':
+                    print(f'{name}, thanks for playing {title}! Come again soon!')
 
 
 if __name__ == "__main__":
-    game= Game()
+    game = Game()
     game.play()
