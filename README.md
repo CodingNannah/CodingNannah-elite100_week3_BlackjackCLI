@@ -33,7 +33,7 @@ To play this program:
 First, enable venv (virtual environment that allows packages in Python).
     Windows:
 1. python -m venv venv
-2. venv\Scripts\Activate
+2. venv\Scripts\activate
     Linux or Mac:
 1. python3 -m venv venv
 2. source/bin/activate 

@@ -1,240 +1,301 @@
-import random 
+import random
+import time
 from colorizer import *
 from pyfiglet import figlet_format
 from my_ascii_magic import intro, blackjack_win, bust
 
 
-
 title = "Coding Nannah's Black Jack Game"
+suit = ["♠", "♣", "♡", "♢"]
+label = [' 2', ' 3', ' 4', ' 5', ' 6', ' 7', ' 8', ' 9', '10', ' J', ' Q', ' K', ' A']
+full_deck = [f"{j} of {i}" for j in label for i in suit]*4
+deck = full_deck[:]
+error = print_red('Try that again.')
+
 
 class Card:
-    def __init__(self, suit, value):
-        # Card as Parent Class?
+    def __init__(self, suit, label):
         self.suit = suit
-        self.value = value
+        self.label = label
 
-    # __repr__() method to return string representation of a value
-    def __repr__(self):
-        return "{} of {}".format(self.value, self.suit)
-
-# test working: 
-# card = Card("")
-
-# dealer: own class? from deck? from hand?
-# Deck of Cards API?
-class Deck:
-    def __init__(self):
-        # every possible card of 52 for suit and for value - list comprehension!
-        self.cards = [Card(s, v) for s in ["♠", "♣", "♡", "♢"]\
-             for v in ["A","2","3","4","5","6","7","8","9","10","J","Q","K"]]
-
-    def shuffle(self):
-        # game usually has and uses 4 decks of cards; can be played with 1
-        if len(self.cards) > 1:
-            random.shuffle(self.cards)
-
-    def deal(self):
-        # remove the top card from the deck, not to return
-        if len(self.cards) > 1:
-            return self.cards.pop(0)
-
-class Hand:
-    # Dealer False - not dealer hand
-    def __init__(self, dealer=False):
-        # dealing cards goes from Deck - full to Hand -empty
-        self.dealer = dealer
-        self.cards = []
-        # starting value of counting cards
-        self.value = 0
-
-    def add_card(self, card):
-        self.cards.append(card)
-
-    # card values change!
-    # BEWARE! calculate_value is NOT a class. It is a function within class Hand
-
-    def calculate_value(self):
-        # starting value of counting cards
-        self.value = value
+    def value (self, hand):
         value = 0
-        #loop through player's hand instance to add the value of player's cards
-        for card in self.cards:
-            # numbers are the value of the number
-            if card.value.isnumeric():
-                self.value += int(card,value)
-            # Ace & Faces
+        for i in hand:
+            if i[0][1] in ('J', 'Q', 'K', '0'):
+                value += 10
+            elif i[0][1] == 'A':
+                value += 11
             else:
-                # Ace is special case:
-                if card.value == "A":
-                    # Dealer
-                    dealer_hand_value = self.dealer_hand.get_value()
-                    if dealer_hand_value < 17:
-                        self.dealer.value += 11
-                    else:
-                        self.dealer.value += 1
-                    # Player
-                    one_or_11 = int(input("Would you like the value of this Ace to be 1 or 11? "))
-                    while one_or_11 != 1 and one_or_11 != 11:
-                        input("Please type either 1 or 11 as the value of this Ace. ")
-                    if one_or_11 == 1:
-                        self.value += 1
-                    elif one_or_11 == 11:
-                        self.value += 11
-                else:
-                    # value of other face cards
-                    self.value += 10
+                value += int(i[0][1])
+        if value <= 21:
+            return value
+        elif value > 21:
+            for i in hand:
+                if i[0][1] != 'A':
+                    return value
+                if i[0][1] == 'A':
+                    value -= 10
+            else:
+                return value
 
-    def get_value(self):
-        self.calculate_value()
-        self.player_hand.get_value()
-        self.dealer_hand.get_value()
-        return self.value
+    """ Not here - belongs with HAND
+       # __repr__() method to return string representation of a value
+    def __repr__(self):
+        return "{} of {}".format(self.label, self.suit)"""
 
-    # we want to SEE the hand(s)!
-    def display(self):
-        if self.dealer:
-            #dealer's first face-down card
-            print("hidden")
-            #dealer's face-up card
-            print(self.cards[1]) # [1] or (1)?
-        else:
-            for card in self.cards:
-                print(card)
-                print("Value:", self.get_value())
+    """Trying to get card appearance to code only ONCE"""
+    # def appearance(self):
+    #     for i in range(1):                       # hand.hand[i][0][0:2]
+    #             print(f' ______\t'*len(hand.hand))
+    #             print(f'|{a}    |'+f'|{b}    |')
+    #             print(f'|      |'*len(hand.hand))
+    #             print(f'|      |'*len(hand.hand))
+    #             print(f'|____{a}|'+f'|____{b}|\n')
 
-class Game:
+class Dealer(Card):
+    
+    def __init__(self, name='Monty'):
+        self.name = name
+        self.hand = []
+        return f"Your dealer today is {name}."        
+
+    def hidden_hand(self):
+        print(f"Dealer's hand:")
+        while self.hand[1][0][0] == '1':                     
+            y = self.hand[1][0][0:2]
+
+        for i in range(1):
+            print(f' ______\t'+f' ______\t')
+            print(f'|# # # |'+f'|{y}    |')
+            print(f'| # # #|'+f'|      |')
+            print(f'|# # # |'+f'|      |')
+            print(f'|_#_#_#|'+f'|____{y}|\n')
+        
+    def reveal_hand(self):
+        print(f"{self.name}'s hand:")         
+        a = self.hand[0][0][0:2]
+        b = self.hand[1][0][0:2]
+ 
+        if len(self.hand) == 2:                      # [[' 4 of hearts'], [' 7 of hearts']]
+            for i in range(1):                       # self.hand[i][0][0:2]
+                print(f' ______\t'*len(self.hand))
+                print(f'|{a}    |'+f'|{b}    |')
+                print(f'|      |'*len(self.hand))
+                print(f'|      |'*len(self.hand))
+                print(f'|____{a}|'+f'|____{b}|\n')
+        elif len(self.hand) == 3:
+            c = self.hand[2][0][0:2]
+            for i in range(1):
+                print(f' ______\t'*len(self.hand))
+                print(f'|{a}    |'+f'|{b}    |'+f'|{c}    |')
+                print(f'|      |'*len(self.hand))
+                print(f'|      |'*len(self.hand))
+                print(f'|____{a}|'+f'|____{b}|'+f'|____{c}|\n')
+        elif len(self.hand) == 4:
+            c = self.hand[2][0][0:2]
+            d = self.hand[3][0][0:2]
+            for i in range(1):
+                print(f' ______\t'*len(self.hand))
+                print(f'|{a}    |'+f'|{b}    |'+f'|{c}    |'+f'|{d}    |')
+                print(f'|      |'*len(self.hand))
+                print(f'|      |'*len(self.hand))
+                print(f'|____{a}|'+f'|____{b}|'+f'|____{c}|'+f'|____{d}|\n')
+        elif len(self.hand) == 5:
+            c = self.hand[2][0][0:2]
+            d = self.hand[3][0][0:2]
+            e = self.hand[4][0][0:2]
+            for i in range(1):
+                print(f' ______\t'*len(self.hand))
+                print(f'|{a}    |'+f'|{b}    |'+f'|{c}    |'+f'|{d}    |'+f'|{e}    |')
+                print(f'|      |'*len(self.hand))
+                print(f'|      |'*len(self.hand))
+                print(f'|____{a}|'+f'|____{b}|'+f'|____{c}|'+f'|____{d}|'+f'|____{e}|\n')
+        elif len(self.hand) == 6:
+            c = self.hand[2][0][0:2]
+            d = self.hand[3][0][0:2]
+            e = self.hand[4][0][0:2]
+            f = self.hand[5][0][0:2]
+            for i in range(1):
+                print(f' ______\t'*len(self.hand))
+                print(f'|{a}    |'+f'|{b}    |'+f'|{c}    |'+f'|{d}    |'+f'|{e}    |'+f'|{f}    |')
+                print(f'|      |'*len(self.hand))
+                print(f'|      |'*len(self.hand))
+                print(f'|____{a}|'+f'|____{b}|'+f'|____{c}|'+f'|____{d}|'+f'|____{e}|'+f'|____{f}|\n')   
+
+
+class Player(Dealer):
+    
+    def __str__(self):
+        return self.name
+
+    def __repr__(self):
+        return f"Player: {self.name}"
+
+
+class Hand():
+
+    def __init__(self):
+        self.hand = []
+
+    def __str__(self):
+        if self.hand == []:
+            return f"This hand contains the {self.hand[0][0]} and the {self.hand[1][0]}."
+
+    def __repr__(self):
+        return f"<Cards | {self.hand[0][0]} {self.hand[1][0]}>"
+
+    def create_hand(self):                                                  
+        self.hand.append(random.choices(deck, k=1)*2)    # deals two cards to hand
+        deck.remove(self.hand[-1][0])*2                  # deletes two cards from deck
+        # self.hand.append(random.choices(deck, k=1))
+        # deck.remove(self.hand[-1][0])
+        return self.hand
+
+    def hit(self):
+        self.hand.append(random.choices(deck, k=1))
+        deck.remove(self.hand[-1][0])
+        print(self.hand)
+        return self.hand
+
+# main function to run game
+
+class Game(Dealer):
     def __init__(self):
         pass
 
-    def welcome():
-        print(intro)
+    print(intro)
 
-        name = input("Enter your name here: ").title()
-        print_yellow(f"Welcome {name} to {title}!")
+    name = input("Enter your name here: ").title()
+    print_cyan(f"Welcome {name} to {title}!")
 
-    # Boolean - playing or not?
-    def play(self):
-        playing = True
-
-        while playing:
-            # need shuffled deck - Deck of Cards API?
-            self.deck = Deck()
-            self.deck.shuffle()
-
-            # need player and dealer hands
-            self.player_hand = Hand()
-            self.dealer_hand = Hand(dealer=True)
-
-            # using range() to deal two cards to each - from deck to hands
-            for i in range(2):
-                self.player_hand.add_card(self.deck.deal())
-                self.dealer_hand.add_card(self.deck.deal())
-
-            # "See" the hands
-            # Change this to visual cards with an API
-            print_yellow("Your hand is: ")
-            self.player_hand.display()
-            print()
-            print_blue("Dealer's hand is: ")
-            self.dealer_hand.display()
-
-            # boolean while loop to run if game NOT over
-            game_over = False
-            while not game_over:
-
-                # Blackjack = game over; check if no blackjack, so game still on
-                player_has_blackjack = self.check_for_blackjack()
-                if player_has_blackjack: 
-                    #ascii_magic here:
-                    print(blackjack_win)
-                    #Winner - must change game_over status
-                    game_over = True
-                    self.show_blackjack_results(player_has_blackjack) # CHANGE THIS with magic and font in show results below
-                    continue               
-            
-            # also in play section: hit or stand 
-            choice = input_cyan("Do you [Hit / Stand]? ").lower()
-            #if the input isn't understood
-            while choice not in ["hit", "h", "stand", "s"]:
-                choice = input_red("Please type either 'hit' or 'stand'. ")
-            if choice in ["hit", "h"]:
-                # choose to hit = add card to hand from deck
-                self.player_hand.add_card(self.deck.deal())
-                self.player_hand.display()
-                # hit possibility is hand is over - check
-                if self.player_is_over():
-                    #ascii_magic here:
-                    print(bust)
-                    print_red("Your hand is over 21. You lose.")
-                    print_red(figlet_format("*****GAME OVER*****"), font='doom')
-                    game_over = True
-            else:
-                # this is the stand option
-                # dealer must deal House faceup value >= 17
-                while dealer_hand_value[1] < 17:
-                    self.dealer_hand.add_card(self.deck.deal())
-
-                # player's hand must be compared to the dealer's 
-                player_hand_value = self.player_hand.get_value()
-                dealer_hand_value = self.dealer_hand.get_value()
-
-                #print hand statements:
-                print("Final Results")
-                print_yellow("Your hand:", player_hand_value)
-                print_blue("Dealer's hand:", dealer_hand_value)
-
-                #compare hands & print win statements:
-                if player_hand_value > dealer_hand_value:
-                    print_green(figlet_format("You win this round!", font = 'advenger'))
-                elif player_hand_value == dealer_hand_value:
-                    print_blue("It's a tie. House wins!")
-                    print_red("You lose this round.")
-                else:
-                    print_blue("House wins!")
-                    print_red("You lose this round.")
-                game_over = True
-        
-        # outside play while loop: make it possible to play another round
-        again = input_cyan("Would you like to play another round? [Y/N] ")
-        while again.lower() not in ["y", "n"]:
-            again = input("Please enter Y or N. ")
-        if again.lower() == "n":
-            # done = playing (no = false), game_over (yes = true)
-            print_cyan(f"Thanks for playing {title}! Come again soon!")
-            playing = False
-        else:
-            # play again = playing (yes = true), game_over (no = false)
-            # game_over = False allows main loop to run again - back to top of self.deck = Deck()
-            game_over = False
-
-
-    def player_is_over(self):
-        # boolean check if hand is over
-        return self.player_hand.get_value() > 21
-
-    def dealer_is_over(self):
-        # boolean check if hand is over
-        return self.dealer_hand.get_value() > 21
+    start_q = input_cyan('Do you know how to play Blackjack? Are you ready to play? (Y/N/Quit) ').lower()
     
-    # must tell computer how to check for blackjack:
-    # NOT allowing dealer to get blackjack!
-    def check_for_blackjack(self, player):
-        player = False
-        # check if player has blackjack
-        if self.player_hand.get_value() == 21:
-            # Boolean value changes to true (yes, blackjack!) 
-            player = True
-            return player
+    if start_q == 'quit':
+        print_cyan(f"Thanks for visiting {title}, {name}. Come again soon!") 
 
-    def show_blackjack_results(self, player_has_blackjack):
-        # if both have blackjack at the same time == draw
-        if player_has_blackjack:
-            print_green(figlet_format("You have blackjack! You win!", font = 'advenger'))
+    if start_q == 'n':
+        clear_screen()
+        print("""
+        Here are the basics: 
 
-        #game loop auto continues if neither has blackjack
-        # in playing: player must choose to hit (add more cards) or stick with current cards
+        You are playing against the dealer. You each receive two cards to begin, however you will only see one 
+        of the dealer's cards. You are trying to beat the dealer at getting 21 points or as close to it as possible
+        without going over. Going over is known as a "bust." Aces are worth either one or eleven points. There are 
+        no wild cards. If, one the first deal, the dealer gives you an ace and a card worth ten points (21 points), 
+        you've won Black Jack! 
+        
+        If you do not have 21 points after the first deal, you will choose to hit (receive another card) or stand 
+        (stay with the cards you have). You may hit as many times as you wish. Just be careful not to go bust! If 
+        you achieve 21 points after the first deal, you win, but do not achieve Black Jack. In the event of a tie, 
+        the dealer wins.
+        """)
+        time.sleep(5)
+        clear_screen()
+        print(start_q)
+
+    while start_q not in ('y', 'n'):
+        print(error)
+        print(start_q)
+
+    if start_q == 'y':
+        print_cyan(figlet_format("Let's Go!"(font='basic')))
+
+        
+        dealer = Dealer("Monty")                                                               # creating instance of Dealer
+        player = Player({name})                                      # creating instance of Player
+        again = 'y'
+
+        while again == 'y':
+            if len(deck) < 25:
+                deck = full_deck[:]
+            
+            print("Monty is dealing...")
+            time.sleep(2)
+
+            player_hand = Hand()
+            player_hand.create_hand()
+            dealer_hand = Hand()
+            dealer_hand.create_hand()
+            player.reveal_hand(player_hand)
+            dealer.hidden_hand(dealer_hand)
+            player_value = player.value(player_hand.hand)
+
+            if player_value == 21:
+                print(blackjack_win)
+                
+            else:
+                print(f"Dealer's visible card: {dealer_hand.hand[1][0]}")
+                choice = input_cyan('Do you choose to Hit or Stand? (H/S) ').lower()
+                
+                while choice not in ('h', 's'):
+                    print(error)
+                    print(choice)
+                
+                while choice == 'h':
+                    player_hand.hit()
+                    player.reveal_hand(player_hand)
+                    player_value = player.value(player_hand.hand)
+                    
+                    if player_value == 21:
+                        print_yellow(figlet_format("You won!"(font='basic')))
+                        break
+                    
+                    elif player_value > 21:
+                        print(bust)
+                        print_red('You BUSTED! Better luck next time!')
+                        break
+                   
+                    else:
+                        print(f"Dealer's visible card: {dealer_hand.hand[1][0]}")
+                        
+                        decision = input('Would you like to hit again? (H/S) ').lower()
+                        while decision not in ('h', 's'):
+                            print(error)
+                            print(decision)
+                else:
+                    # if stand - determine winner
+                    # show dealers cards
+                    if player_value >= 21:
+                        continue
+                    
+                    else: 
+                        dealer.reveal_hand(dealer_hand)
+                        dealer_value = dealer.value(dealer_hand.hand)
+                        
+                        while dealer_value < 17:
+                            print("Monty hits the Dealer hand.")
+                            dealer_hand.hit()
+                            dealer.reveal_hand(dealer_hand)
+                            dealer_value = dealer.value(dealer_hand.hand)
+                            time.sleep(2)
+                        
+                        if 17 <= dealer_value <= 21:
+                            if dealer_value > player_value:
+                                player.value(player_hand.hand)
+                                print_blue('Dealer wins!')
+
+                            elif dealer_value == player_value:
+                                player.value(player_hand.hand)
+                                print_blue("It's a tie. Dealer wins!")
+                            
+                            else:
+                                player.value(player_hand.hand)
+                                print_yellow('You win!')
+                               
+                        else:
+                            player.value(player_hand.hand)
+                            print_yellow('Dealer BUSTED. You win!')
+                            
+            again = input_cyan('Would you like to play again? (Y/N) ')
+            
+            while again not in ('y','n'):
+                print(error)
+                print(again)
+            
+            if again == 'n':
+                print(f'{name}, thanks for playing {title}! Come again soon!')
 
 
 if __name__ == "__main__":
-    game = Game()
+    game= Game()
     game.play()
